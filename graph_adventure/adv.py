@@ -4,9 +4,33 @@ from world import World
 
 import random
 
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
 # Load world
 world = World()
-
 # You may uncomment the smaller graphs for development and testing purposes.
 
 # roomGraph={0: [(3, 5), {'n': 1}], 1: [(3, 6), {'s': 0, 'n': 2}], 2: [(3, 7), {'s': 1}]}
@@ -21,7 +45,44 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+#DFT
+# s = Stack()
+# s.push(player.currentRoom.id)
+# visited = list()
+# while s.size() > 0:
+#     roomID = s.pop()
+#     if roomID not in visited:
+#         # gets all of the exits in the plaeyers current room
+#         exits = player.currentRoom.getExits()
+#         # picks a random exit direction
+#         picked_direction = random.choice(exits)
+#         # move player in direction
+#         player.travel(picked_direction)
+#         # log the direction
+#         # directions.append(picked_direction)
+#         # add the id to visited rooms
+#         visited.append(roomID)
+#         # loop through connected room ids and add them to the stack.
+#         # get room in each direction to find connected rooms.           
+# print(visited)
+
+#traversal path is a list of directions
+traversalPath = []
+
+q = Queue()
+q.enqueue(player.currentRoom.id)
+visited = set()
+
+while q.size() > 0:
+    v = q.dequeue()
+    if v not in visited:
+        # print(v)
+        visited.add(v)
+        #roomGraph[v][1] gets me {'n': 1, 's': 5, 'e': 3, 'w': 7}
+        directions = roomGraph[v][1]
+        for neighbor in directions:
+            q.enqueue(directions[neighbor])
+print(len(visited))
 
 
 # TRAVERSAL TEST
